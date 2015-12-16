@@ -79,11 +79,11 @@ def gen_validation_data(X, y, validation_size) :
 def calc_error(predict, target) :
 	error = 0
 	for i in range(len(target)) :
-		if target[i]*predict[i] < 0:
+		if target[i]*predict[i] <= 0:
 			error += 1
 		# end if
 	# end for
-	return error/len(target), error
+	return float(error)/float(len(target)), error
 	
 # ============================================= end ============================================= #	
 

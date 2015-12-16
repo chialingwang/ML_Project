@@ -93,15 +93,19 @@ if __name__ == "__main__":
 
     Train_XX, Train_yy, validation_XX, validation_yy = Grid.gen_validation_data(Train_X,Train_y,validation_size)
 
-    for i in range(-10,10):
+#    for i in range(1,2):
+    for i in range(-9,9 , 3):
 	C = 2**i
     	mysvm = SVM.MySVM(alpha, beta, C, h, max_iter, step_size, rnd_number, Train_XX, Train_yy, validation_XX, validation_yy, gradient_error, improve_ratio)
 
     #min_C1, min_C2, min_error1, min_error2 = Grid.grid_search_for_C([2**i for i in range(-10,10) ], Train_X, Train_y, 10, mysvm)
     #print(min_C1," , ",min_C2," , ",min_error1," , ",min_error2)
     	start = time.time()
-    
+   	mysvm.fit(Train_X , Train_y) 
     	predict_test = mysvm.predict(Test_X)
+
+	print(predict_test , Test_y)
+
     	test_error_rate, test_error_num = Grid.calc_error(predict_test, Test_y)
 
     	finish = time.time()
