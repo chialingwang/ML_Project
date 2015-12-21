@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#PBS -S /bin/bash
+#PBS -V
+#PBS -N centrolize
+#PBS -M cw2189@nyu.edu
+#PBS -l nodes=1:ppn=1,walltime=24:00:00,mem=300GB
+
+
+module load scikit-learn/intel/0.17b1
+module load  zlib/intel/1.2.8
+module load pillow/intel/2.7.0
+
+cd /scratch/cw2189/ML_SparsingModeling/2_extract_centroids_withscikit
+python GridSearch.py
+
+exit

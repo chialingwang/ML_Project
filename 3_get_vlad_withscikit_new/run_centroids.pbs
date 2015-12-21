@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#PBS -S /bin/bash
+#PBS -V
+#PBS -N get_vlad__
+#PBS -M cw2189@nyu.edu
+
+#PBS -l nodes=1:ppn=1,walltime=20:00:00,mem=200GB
+
+
+module load scikit-learn/intel/0.17b1
+module load  zlib/intel/1.2.8
+module load pillow/intel/2.7.0
+
+cd /scratch/cw2189/ML_SparsingModeling/3_get_vlad_withscikit_new
+python run_script.py
+
+exit

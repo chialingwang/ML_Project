@@ -106,9 +106,23 @@ class MySVM :
 	# grad_loss_sum is d X 1
 	def grad_loss_sum_calc(self, grad_loss) :
 		grad_loss_sum = list()
+		count = 0
 		for item in grad_loss:
+		#	sum_p = 0.0
+		#	sum_m = 0.0
+		#	for i in item :
+		#		if i > 0.0:
+		#			sum_p += i
+		#		elif i < 0.0:
+		#			sum_m += i
+			# end for
+			#if count == 0 :
+			#	#print("Hi: ",sum_p,sum_m,np.sum(item),np.sum(item[0]))
+			#	count = 1
 			grad_loss_sum.append(np.sum(item))
+
 		# end for
+		#print("====",len(grad_loss[0]),grad_loss[0]," === ",grad_loss,grad_loss_sum)
 		return grad_loss_sum
 
 
@@ -127,7 +141,8 @@ class MySVM :
 			w = self.w
 		# end if
 		grad_loss_sum = self.grad_loss_sum_calc(grad_loss)
-		return np.multiply(2.0, w) + np.multiply(self.C/size, grad_loss_sum)
+		#print("grad_loss_sum: ",grad_loss_sum," , ",np.multiply(float(self.C)/float(size),grad_loss_sum))
+		return np.multiply(2.0, w) + np.multiply(float(self.C)/float(size), grad_loss_sum)
 
 	# ============================== end ============================== #	
 
@@ -135,11 +150,12 @@ class MySVM :
 		error = 0
 		predict_list = np.dot(w, np.transpose(self.validation_X))
 		for i in range(len(self.validation_y)) :
-			if  predict_list[i]*self.validation_y[i] < 0 :
+			if  predict_list[i]*self.validation_y[i] <= 0 :
 				error += 1
 			# end if
 		# end for
-		return error/self.validation_size
+		#print("v_size: ",self.validation_size)
+		return float(error)/float(self.validation_size)
 
 	# ============================== end ============================== #	
 
@@ -162,15 +178,16 @@ class MySVM :
 	
 	# ============================== end ============================== #
 
-	def my_gradient_decent(self, option=3, fix_size=False) :
+	def my_gradient_decent(self, option=3, fix_size=True) :
 		self.w = np.zeros(self.point_dim)
 		self.obj_record = list()
 		perfect_misclassify_error = 1.0
 		perfect_w = np.zeros(self.point_dim)
-		step_size = self.step_size
+		#step_size = self.step_size
+		step_size = 0.3
 		window_size = 10
 		error_window = deque()
-
+		step = list()
 		#perfect_time
 		#start = time.time()
 		for iter in range(self.max_iter) :
@@ -180,21 +197,25 @@ class MySVM :
 			grad_loss       = self.grad_loss_calc(yt, self.train_X, self.train_y)
 			grad_val        = self.compute_grad(grad_loss, self.train_size)
 			current_obj_val = self.compute_obj(loss, self.train_size)
-			
-			if not fix_size : 
+			#print( grad_val , grad_loss)	
+			if not fix_size :
+				#print("Hello") 
 				step_size = self.backtracking_line_search(current_obj_val, step_size, grad_val, self.train_X, self.train_y, self.train_size)
 			# end if
-
+			step.append(step_size)
 			# update weight
 			#print(self.w," , ",np.multiply(step_size, grad_val))
 			old_w = self.w
 			self.w = self.w - np.multiply(step_size, grad_val)
 			self.obj_record.append(current_obj_val)
 
-			if option == 2 :
+			if option == 2 and iter > 0:
 				if np.linalg.norm(grad_val) < self.gradient_error :
 					if np.linalg.norm(self.w) != 0 :
 						self.w = self.w/np.linalg.norm(self.w)
+					aa = np.linalg.norm(grad_val)
+					bb = self.gradient_error
+					print("w: ",len(self.w)," , grad_val: ",aa," , ",bb," , iter:",iter)
 					return
 				# end if
 			elif option == 3 :
@@ -212,6 +233,7 @@ class MySVM :
 						self.w = perfect_w
 						if np.linalg.norm(self.w) != 0 :
 							self.w = self.w/np.linalg.norm(self.w)
+						print (current_misclassify_error , window_min , error_window , step  , iter , step_size)
 						return 
 					else:
 						error_window.append(current_misclassify_error)

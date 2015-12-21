@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#PBS -S /bin/bash
+#PBS -V
+#PBS -N patchlize_199
+#PBS -l nodes=1:ppn=1,walltime=10:00:00,mem=100GB
+
+
+module load scikit-learn/intel/0.17b1
+module load  zlib/intel/1.2.8
+module load pillow/intel/2.7.0
+
+cd /scratch/cw2189/ML_SparsingModeling/1_extract_patch
+python image_patch_process_199.py
+
+exit

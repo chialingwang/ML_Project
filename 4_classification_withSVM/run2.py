@@ -9,7 +9,7 @@ import SVM
 import runGrid as Grid
 import time
 
-vlad_accee = "/scratch/cw2189/ML_SparsingModeling/3_get_vlad_withscikit"
+vlad_accee = "/scratch/cw2189/ML_SparsingModeling/3_get_vlad_withscikit_new"
 
 
 
@@ -54,10 +54,10 @@ def run(class_num, subsample_size , cluster_num, window_size  ):
     bofs_test , lable_test = get_vlad(filename)
    
     TRAIN = Choose_target.Choose_Target(bofs,lable)
-    TRAIN.select(10)
+    TRAIN.select(1)
     
     TEST = Choose_target.Choose_Target(bofs_test,lable_test)
-    TEST.select(10)
+    TEST.select(1)
     
     return  TRAIN.X , TRAIN.y ,  TEST.X , TEST.y
 
@@ -67,10 +67,10 @@ if __name__ == "__main__":
     rnd_number    = 8131985
 #    score = run(class_num, subsample_size , cluster_num, window_size,  method='knn' , n_nb = n_nb)
 
-    class_num = 61
+    class_num = 2
     subsample_size = 92
-    window_size = 3
-    cluster_num = 64
+    window_size = 5
+    cluster_num = 8
 
 
     alpha                   = 0.2
@@ -93,8 +93,8 @@ if __name__ == "__main__":
 
     Train_XX, Train_yy, validation_XX, validation_yy = Grid.gen_validation_data(Train_X,Train_y,validation_size)
 
-#    for i in range(1,2):
-    for i in range(-9,9 , 3):
+#    for i in range(5,10):
+for i in range(-3,10 , 1):
 	C = 2**i
     	mysvm = SVM.MySVM(alpha, beta, C, h, max_iter, step_size, rnd_number, Train_XX, Train_yy, validation_XX, validation_yy, gradient_error, improve_ratio)
 
@@ -103,8 +103,9 @@ if __name__ == "__main__":
     	start = time.time()
    	mysvm.fit(Train_X , Train_y) 
     	predict_test = mysvm.predict(Test_X)
-
-	print(predict_test , Test_y)
+#        print(mysvm.w)
+#	print(predict_test)
+#	print(Test_y)
 
     	test_error_rate, test_error_num = Grid.calc_error(predict_test, Test_y)
 
