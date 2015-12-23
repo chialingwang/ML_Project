@@ -194,20 +194,24 @@ The differences between KMeans and Mini-Batch KMeans are not only the different 
 
 A good initial condition not only improves the accuracy, but also decreases the times of iteration. KMeans++ is a good method to find the initial condition. The  concept of KMeans++ is to find centroids which are enough separate. By doing so, we can avoid choosing clusters which are very closest. \\
 
-The following figure describes the concept of finding point far from the chosen centroids.
-\begin{center}
-	\begin{figure}[H]
-%		\includegraphics[scale=0.2]{far.jpg}
-	\end{figure}
-\end{center}
-
-But we don't choose the farthest point, because we may choose the outlier point, like the following figure
-\begin{center}
-	\begin{figure}[H]
-%		\includegraphics[scale=0.2]{farthest.jpg}
-	\end{figure}
-\end{center}
-
+\begin{figure}[H]
+	\begin{center}
+		\begin{subfigure}[H]{.5\textwidth}
+			\centering
+			\includegraphics[ scale=0.25 ]{far.jpg}
+			\caption{Finding point far from the chosen centroids}
+			\label{fig:far_centroids}
+		\end{subfigure}%
+		\begin{subfigure}[H]{.5\textwidth}
+			\centering
+			\includegraphics[ scale=0.2  ]{farthest.jpg}
+			\caption{May choose the outlier point}
+			\label{fig:ourlier_centroids}
+		\end{subfigure}%
+		\caption{How to choose the point?}
+		\label{fig:centroids}
+	\end{center}
+\end{figure}
 \item[Moving Average]
 
 The definition of moving average is the following, \\
@@ -242,6 +246,17 @@ sum $+= x[\text{i}] * y[\text{i}]$; \\
 Thus, the calculation is $O(d)$, precisely speaking d multiplications and d-1 additions. To use the traditional method to assign a label to every point, it will cost $O(d \times M \times C)$, where $M$ is the number of data point, and $C$ is the number of cluster.
 
 To improve this calculation, we need to use the property of CPU -- SIMD (Single Instruction Multiple Data). In x86 of Intel CPU, SSE(Streaming SIMD Extension) is an implementation of SIMD. SSE is a collection of 128 bits(16 bytes) CPU registers. These registers can do the same operation simultaneously. Recall the byte number of float type in C is 4 bytes. Thus, we can image if we have two vectors of four dimension with float type, and we want to do inner product. To use SSE, we can do the multiplications in one CPU cycle. And it also can do additions in registers without moving data to the address of "sum". The application of SSE is not only the calculation of inner product, there are other vector calculations in KMeans approach, like the calculation of center. Fortunately, scikit-learn includes of "fast\_dot" function to let us not write a assembly code to implement fast inner product.
+\begin{verbatim}
+
+
+
+
+
+
+
+
+
+\end{verbatim}
 
 \item[Lazy Label Assignment]
 
@@ -250,7 +265,8 @@ If looking detail, we can observe that there may be duplicate calculations of Eu
 Recall that two properties of triangle inequality, \\
 \begin{center}
 	\begin{figure}[H]
-%		\includegraphics[scale=0.5]{triangle.jpg}
+		\centering
+		\includegraphics[scale=0.8]{triangle.jpg}
 	\end{figure}
 \end{center}
 (1) if $d(c,c^{'}) \geq 2d(x,c)$ , then $d(x,c^{'}) \geq d(x,c)$ \\
@@ -486,6 +502,9 @@ In additions, for collaboration efficency, we uploaded all our scripts on the gi
 %\begin{verbatim}
 
 
+
+
+
 %\end{verbatim}
 
 
@@ -510,6 +529,22 @@ All our codes and experiments script could be found in the github link \cite{git
 \end{table} 
 
 \begin{verbatim}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \end{verbatim}
 
