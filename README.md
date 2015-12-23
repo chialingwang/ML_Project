@@ -2,6 +2,7 @@
 In this project we present a approach to do texture image recognition 
 by performing the vlad of all the texture images based on the \(CUReT\) texture database. 
 The approach consists of following steps: 
+
 1) Database prepossessing; 
 https://github.com/chialingwang/ML_Project/tree/master/1_extract_patch/scrip_gen.csh
 
